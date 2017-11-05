@@ -23,7 +23,11 @@ import (
 	// "github.com/spf13/viper"
 )
 
-var cfgFile string
+var (
+	Version   = "undefined"
+	BuildDate = "undefined"
+	// GitVersion = ""
+)
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -32,12 +36,19 @@ var RootCmd = &cobra.Command{
 	Long:  `sfd provides file and project template management.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Run: func(cmd *cobra.Command, args []string) {
+		if cmd.Flags().Lookup("version").Changed {
+			fmt.Println("sfd version:", Version, "\nBuild:", BuildDate)
+		} else {
+			cmd.Help()
+		}
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
+func Execute(version, builddate string) {
+	Version, BuildDate = version, builddate
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -54,7 +65,7 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	// RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	RootCmd.Flags().BoolP("version", "v", false, "Display version information")
 }
 
 // // initConfig reads in config file and ENV variables if set.

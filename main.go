@@ -16,6 +16,13 @@ package main
 
 import "github.com/Tim15/sfd/cmd"
 
+var (
+	// Set at build-time
+	Version   = "undefined"
+	BuildDate = "undefined"
+	// GitVersion = ""
+)
+
 func main() {
-	cmd.Execute()
+	cmd.Execute(Version, BuildDate)
 }
